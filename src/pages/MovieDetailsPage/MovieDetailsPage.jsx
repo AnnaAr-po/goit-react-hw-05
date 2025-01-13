@@ -1,7 +1,7 @@
 import { useParams, Outlet, Link, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { fetchMovieDetails } from "../../services/api";
-import s from "./MovieDetailsPage.module.css";
+import css from "./MovieDetailsPage.module.css";
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
@@ -9,7 +9,7 @@ const MovieDetailsPage = () => {
   const [error, setError] = useState(null);
 
   const location = useLocation();
-  const goBackRef = useRef(location.state?.from || "/");
+  const goBack = useRef(location.state?.from || "/");
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -33,11 +33,11 @@ const MovieDetailsPage = () => {
   if (!movie) return <div>Loading...</div>;
 
   return (
-    <div className={s.container}>
-      <Link className={s.btn} to={goBackRef.current}>Go back</Link>
-      <div className={s.details}>
+    <div className={css.container}>
+      <Link className={css.btn} to={goBack.current}>Go back</Link>
+      <div className={css.details}>
       <img
-        className={s.img}
+        className={css.img}
         src={
           movie.poster_path
             ? `https://image.tmdb.org/t/p/w300/${movie.poster_path}`
@@ -45,27 +45,35 @@ const MovieDetailsPage = () => {
         }
         alt={movie.title}
       />
-      <div className={s.div}>
-        <h1 className={s.title}>
+      <div className={css.div}>
+        <h2 className={css.title}>
           {movie.title} ({movie.release_date.slice(0, 4)})
-        </h1>
+        </h2>
         <p>
           <strong>User Score:</strong> {movie.vote_average * 10}%
         </p>
-        <h4>Overview</h4>
+        <h3>Overview</h3>
         <p>{movie.overview}</p>
-        <h4>Genres</h4>
+        <h3>Genres</h3>
         <p>{movie.genres.map((genre) => genre.name).join(", ")}</p>
-    
-          <nav>
-            <h3>Additional information</h3>
-            <Link to="cast">Cast</Link>
-            <Link to="reviews">Reviews</Link>
-          </nav>
-          <Outlet />
 </div>
       </div>
+            <h3>Additional information</h3>
+         <ul className={css.links}>
+        <li>
+          <Link to="cast" className={css.link}>
+            Cast
+          </Link>
+        </li>
+        <li>
+          <Link to="reviews" className={css.link}>
+            Reviews
+          </Link>
+        </li>
+      </ul>
+          <Outlet />
     </div>
+    
   );
 };
 
