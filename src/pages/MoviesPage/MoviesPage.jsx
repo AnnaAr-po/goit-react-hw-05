@@ -7,25 +7,26 @@ import styles from "./MoviesPage.module.css";
 
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
+  const [prevQuery, setPrevQuery] = useState(""); 
   const [query, setQuery] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
 
   const queryParam = searchParams.get("query") || "";
 
   useEffect(() => {
-    if (!queryParam) return;
-    setQuery(queryParam);
+    if (!queryParam || queryParam === prevQuery) return; 
+    setPrevQuery(queryParam); 
     fetchMoviesByQuery(queryParam)
       .then((data) => {
         if (data.length === 0) {
           toast.error("No movies found. Try another query!");
         }
-        setMovies(data);
+        setMovies(data); 
       })
       .catch(() => {
         toast.error("Failed to fetch movies. Please try again later.");
       });
-  }, [queryParam]);
+  }, [queryParam, prevQuery]); 
 
   const handleChange = (event) => {
     setQuery(event.target.value);
